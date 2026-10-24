@@ -4,30 +4,50 @@
    <head>
       <title>Metric-Imperial Converter</title>
       <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon"/>
-      <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
       <link href="style.css" rel="stylesheet" type="text/css">
    </head>
 
    <body>
-    <h1>Metric-Imperial Converter</h1>
-    <p>Convert volumes, distances, and weights using the API.</p>
-    <hr />
+    <h1>Metric/Imperial Converter</h1>
+    <hr>
     <div class="container">
-      <h2>Example Usage:</h2>
-      <ul>
-        <li><a href="/api/convert?input=10L">10L to gallons</a></li>
-        <li><a href="/api/convert?input=1%2F2gal">1/2 gallon to liters</a></li>
-        <li><code>GET /api/convert?input=numberUnit</code></li>
-      </ul>
+      <h2>Example usage</h2>
+      <code><a href="/api/convert?input=4gal">/api/convert?input=4gal</a></code>
+      <code><a href="/api/convert?input=1%2F2km">/api/convert?input=1/2km</a></code>
+      <code><a href="/api/convert?input=5.4%2F3lbs">/api/convert?input=5.4/3lbs</a></code>
+      <code><a href="/api/convert?input=kg">/api/convert?input=kg</a></code>
 
-      <form action="/api/convert" method="GET">
-        <label for="input">Value and unit (gal, L, mi, km, lbs, kg)</label>
-        <input id="input" type="text" name="input" placeholder="10L" required>
-        <button type="submit">Convert</button>
-      </form>
+      <h2>Example return</h2>
+      <code id="conversion-result">{ initNum: 3.1, initUnit: 'mi', returnNum: 4.98895, returnUnit: 'km', string: '3.1 miles converts to 4.98895 kilometers' }</code>
     </div>
-    <div class="footer">
-      <p>Fractions and decimals are supported. Example: <code>2.5/6kg</code>.</p>
-    </div>
+    <hr>
+    <h2>Front-End</h2>
+    <form action="/api/convert" method="GET">
+      <input id="input" type="text" name="input" placeholder="3.1mi" aria-label="Value and unit to convert" required>
+      <button type="submit">Convert!</button>
+    </form>
+    <script>
+      var form = document.querySelector('form');
+      var result = document.getElementById('conversion-result');
+
+      form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        var params = new URLSearchParams(new FormData(form));
+        try {
+          var response = await fetch('/api/convert?' + params.toString());
+          var conversion = await response.json();
+          function formatValue(value) {
+            return typeof value === 'string' ? "'" + value + "'" : value;
+          }
+          result.textContent = '{ initNum: ' + formatValue(conversion.initNum) +
+            ', initUnit: ' + formatValue(conversion.initUnit) +
+            ', returnNum: ' + formatValue(conversion.returnNum) +
+            ', returnUnit: ' + formatValue(conversion.returnUnit) +
+            ', string: ' + formatValue(conversion.string) + ' }';
+        } catch (error) {
+          result.textContent = 'Unable to convert this value.';
+        }
+      });
+    </script>
   </body>
 </html>
