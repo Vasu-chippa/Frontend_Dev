@@ -2,34 +2,32 @@
 
 <html>
    <head>
-      <title>URL Shortener Microservice</title>
+      <title>Exercise Tracker</title>
       <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon"/>
       <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
       <link href="style.css" rel="stylesheet" type="text/css">
    </head>
 
    <body>
-    <h1>URL Shortener Microservice</h1>
-    <p>Create a short link for a valid HTTP or HTTPS URL.</p>
+    <h1>Exercise Tracker</h1>
+    <p>Create users, record exercises, and view filtered exercise logs.</p>
     <hr />
     <div class="container">
       <h2>Example Usage:</h2>
       <ul>
-        <li><code>POST /api/shorturl</code> with a <code>url</code> form field</li>
-        <li><code>GET /api/shorturl/1</code> redirects to the saved URL</li>
-        <li><a href="/api/whoami">/api/whoami</a></li>
-        <li><a href="/api/2015-12-25">/api/2015-12-25</a></li>
-        <li><a href="/api/1451001600000">/api/1451001600000</a></li>
+        <li><code>POST /api/users</code> with a <code>username</code> form field</li>
+        <li><code>POST /api/users/:_id/exercises</code> with <code>description</code>, <code>duration</code>, and optional <code>date</code></li>
+        <li><a href="/api/users">GET /api/users</a></li>
       </ul>
 
-      <form action="/api/shorturl" method="POST">
-        <label for="url">URL to shorten</label>
-        <input id="url" type="url" name="url" placeholder="https://www.example.com" required>
-        <button type="submit">Shorten URL</button>
+      <form action="/api/users" method="POST">
+        <label for="username">Create a user</label>
+        <input id="username" type="text" name="username" placeholder="username" required>
+        <button type="submit">Create User</button>
       </form>
     </div>
     <div class="footer">
-      <p>This service also provides timestamp and request-header APIs.</p>
+      <p>Use <code>GET /api/users/:_id/logs?from=yyyy-mm-dd&amp;to=yyyy-mm-dd&amp;limit=20</code> to filter a user's exercise log.</p>
     </div>
   </body>
 </html>

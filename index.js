@@ -5,6 +5,7 @@
 var express = require('express');
 var app = express();
 var dns = require('dns');
+var crypto = require('crypto');
 
 app.set('trust proxy', 1);
 
@@ -78,6 +79,102 @@ app.get("/api/shorturl/:shortUrl", function (req, res) {
   }
 
   res.redirect(originalUrl);
+});
+
+var users = new Map();
+
+app.post("/api/users", function (req, res) {
+  var username = typeof req.body.username === 'string' ? req.body.username.trim() : '';
+
+  if (!username) {
+    return res.status(400).json({error: 'Username is required'});
+  }
+
+  var user = {_id: crypto.randomBytes(12).toString('hex'), username: username};
+  users.set(user._id, {user: user, exercises: []});
+  res.json(user);
+});
+
+app.get("/api/users", function (req, res) {
+  res.json(Array.from(users.values(), function (record) {
+    return record.user;
+  }));
+});
+
+app.post("/api/users/:_id/exercises", function (req, res) {
+  var record = users.get(req.params._id);
+
+  if (!record) {
+    return res.status(404).json({error: 'User not found'});
+  }
+
+  var description = typeof req.body.description === 'string' ? req.body.description.trim() : '';
+  var duration = Number(req.body.duration);
+  var date = req.body.date ? new Date(req.body.date) : new Date();
+
+  if (!description || !Number.isFinite(duration) || duration <= 0 || Number.isNaN(date.getTime())) {
+    return res.status(400).json({error: 'Description, positive duration, and a valid date are required'});
+  }
+
+  var exercise = {
+    description: description,
+    duration: duration,
+    date: date
+  };
+  record.exercises.push(exercise);
+  res.json({
+    _id: record.user._id,
+    username: record.user.username,
+    description: exercise.description,
+    duration: exercise.duration,
+    date: exercise.date.toDateString()
+  });
+});
+
+app.get("/api/users/:_id/logs", function (req, res) {
+  var record = users.get(req.params._id);
+
+  if (!record) {
+    return res.status(404).json({error: 'User not found'});
+  }
+
+  var exercises = record.exercises.slice();
+  if (req.query.from) {
+    var from = new Date(req.query.from);
+    if (!Number.isNaN(from.getTime())) {
+      exercises = exercises.filter(function (exercise) {
+        return exercise.date >= from;
+      });
+    }
+  }
+  if (req.query.to) {
+    var to = new Date(req.query.to);
+    if (!Number.isNaN(to.getTime())) {
+      to.setUTCHours(23, 59, 59, 999);
+      exercises = exercises.filter(function (exercise) {
+        return exercise.date <= to;
+      });
+    }
+  }
+  if (req.query.limit !== undefined) {
+    var limit = Number.parseInt(req.query.limit, 10);
+    if (Number.isInteger(limit) && limit >= 0) {
+      exercises = exercises.slice(0, limit);
+    }
+  }
+
+  res.json({
+    _id: record.user._id,
+    username: record.user.username,
+    count: record.exercises.length,
+    log: exercises.map(function (exercise) {
+      return {
+        description: exercise.description,
+        duration: exercise.duration,
+        date: exercise.date.toDateString()
+      };
+    })
+  });
 });
 
 app.get("/api/:date?", function (req, res) {
