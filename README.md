@@ -1,18 +1,18 @@
-# Request Header Parser Microservice
+# URL Shortener Microservice
 
-An Express API that reports request header details and parses dates into Unix
-milliseconds and UTC strings.
+An Express API for creating and redirecting short URLs. Submitted links must
+use HTTP or HTTPS and resolve to a dotted hostname.
 
 ## Endpoints
 
+- `POST /api/shorturl` with a form field named `url`: returns the original URL
+  and a numeric short URL ID.
+- `GET /api/shorturl/:short_url`: redirects to the saved URL.
+- Invalid links return `{"error":"invalid url"}`.
 - `GET /api/whoami`: returns the request IP address, preferred language, and
   browser software (user-agent).
 - `GET /api/`: current time
 - `GET /api/:date`: a date string or Unix timestamp in milliseconds
 
-Example: `GET /api/1451001600000` returns
-`{"unix":1451001600000,"utc":"Fri, 25 Dec 2015 00:00:00 GMT"}`.
-Invalid dates return `{"error":"Invalid Date"}`.
-
-Run locally with `npm start`. On Render, the endpoint uses Cloudflare's
-client-IP header and falls back to Express's trusted-proxy IP resolution.
+Run locally with `npm start`. Short URL mappings are held in memory and reset
+when the service restarts.

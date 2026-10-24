@@ -4,6 +4,7 @@
 // init project
 var express = require('express');
 var app = express();
+var dns = require('dns');
 
 app.set('trust proxy', 1);
 
@@ -11,6 +12,8 @@ app.set('trust proxy', 1);
 // so that your API is remotely testable by FCC 
 var cors = require('cors');
 app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
@@ -32,6 +35,49 @@ app.get("/api/whoami", function (req, res) {
     language: req.get('accept-language') || '',
     software: req.get('user-agent') || ''
   });
+});
+
+var shortUrls = new Map();
+var nextShortUrl = 1;
+
+app.post("/api/shorturl", function (req, res) {
+  var originalUrl = req.body.url;
+  var parsedUrl;
+
+  if (typeof originalUrl !== 'string') {
+    return res.json({error: 'invalid url'});
+  }
+
+  try {
+    parsedUrl = new URL(originalUrl);
+  } catch (error) {
+    return res.json({error: 'invalid url'});
+  }
+
+  if (!['http:', 'https:'].includes(parsedUrl.protocol) || !parsedUrl.hostname.includes('.')) {
+    return res.json({error: 'invalid url'});
+  }
+
+  dns.lookup(parsedUrl.hostname, function (error) {
+    if (error) {
+      return res.json({error: 'invalid url'});
+    }
+
+    var shortUrl = nextShortUrl++;
+    shortUrls.set(shortUrl, originalUrl);
+    res.json({original_url: originalUrl, short_url: shortUrl});
+  });
+});
+
+app.get("/api/shorturl/:shortUrl", function (req, res) {
+  var shortUrl = Number(req.params.shortUrl);
+  var originalUrl = /^\d+$/.test(req.params.shortUrl) ? shortUrls.get(shortUrl) : undefined;
+
+  if (!originalUrl) {
+    return res.status(404).json({error: 'No short URL found'});
+  }
+
+  res.redirect(originalUrl);
 });
 
 app.get("/api/:date?", function (req, res) {
