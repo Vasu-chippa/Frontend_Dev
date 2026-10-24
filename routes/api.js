@@ -10,6 +10,10 @@ router.get('/convert', function (req, res) {
   var returnNum = convertHandler.convert(initNum, initUnit);
   var string = convertHandler.getString(initNum, initUnit, returnNum, returnUnit);
 
+  if (string.startsWith('invalid ')) {
+    return res.type('text').send(string);
+  }
+
   res.json({
     initNum: initNum,
     initUnit: initUnit,

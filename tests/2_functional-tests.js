@@ -17,17 +17,17 @@ describe('GET /api/convert', function () {
 
   it('returns an invalid unit error', async function () {
     var response = await request(app).get('/api/convert').query({input: '32g'});
-    assert.equal(response.body.string, 'invalid unit');
+    assert.equal(response.text, 'invalid unit');
   });
 
   it('returns an invalid number error', async function () {
     var response = await request(app).get('/api/convert').query({input: '3/7.2/4kg'});
-    assert.equal(response.body.string, 'invalid number');
+    assert.equal(response.text, 'invalid number');
   });
 
   it('returns an error when both number and unit are invalid', async function () {
     var response = await request(app).get('/api/convert').query({input: '3/7.2/4kilomegagram'});
-    assert.equal(response.body.string, 'invalid number and unit');
+    assert.equal(response.text, 'invalid number and unit');
   });
 
   it('defaults to one when no number is provided', async function () {
