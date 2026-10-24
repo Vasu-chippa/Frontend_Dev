@@ -2,24 +2,25 @@
 
 <html>
    <head>
-      <title>Timestamp API</title>
+      <title>Request Header Parser Microservice</title>
       <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon"/>
       <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
       <link href="style.css" rel="stylesheet" type="text/css">
    </head>
 
    <body>
-    <h1>Timestamp API</h1>
-    <p>Convert a date or Unix timestamp into UTC time.</p>
+    <h1>Request Header Parser Microservice</h1>
+    <p>Inspect request headers and convert dates to UTC timestamps.</p>
     <hr />
     <div class="container">
       <h2>Example Usage:</h2>
       <ul>
+        <li><a href="/api/whoami">/api/whoami</a></li>
         <li><a href="/api/2015-12-25">/api/2015-12-25</a></li>
         <li><a href="/api/1451001600000">/api/1451001600000</a></li>
       </ul>
 
-      <h2>Example Output:</h2>
+      <h2>Timestamp Example Output:</h2>
       <p>
         <code>{"unix":1451001600000, "utc":"Fri, 25 Dec 2015 00:00:00 GMT"}</code>
       </p>

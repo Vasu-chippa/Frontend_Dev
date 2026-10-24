@@ -5,6 +5,8 @@
 var express = require('express');
 var app = express();
 
+app.set('trust proxy', 1);
+
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC 
 var cors = require('cors');
@@ -22,6 +24,14 @@ app.get("/", function (req, res) {
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
+});
+
+app.get("/api/whoami", function (req, res) {
+  res.json({
+    ipaddress: req.ip,
+    language: req.get('accept-language') || '',
+    software: req.get('user-agent') || ''
+  });
 });
 
 app.get("/api/:date?", function (req, res) {
