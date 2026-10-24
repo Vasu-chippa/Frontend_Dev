@@ -1,9 +1,15 @@
-# File Metadata Microservice
+# Metric-Imperial Converter
 
-An Express API that reports metadata for uploaded files.
+An Express API and web form for converting gallons, liters, miles, kilometers,
+pounds, and kilograms. Numeric inputs may be whole numbers, decimals,
+fractions, or decimal fractions, such as `2.5/6kg`.
 
 ## Endpoints
 
+- `GET /api/convert?input=10L`: returns the initial and converted values,
+  units, and a human-readable conversion string.
+- Supported units: `gal`, `L`, `mi`, `km`, `lbs`, and `kg` (case-insensitive).
+- Results are rounded to five decimal places.
 - `POST /api/fileanalyse` with a multipart file field named `upfile`: returns
   the uploaded file's `name`, MIME `type`, and `size` in bytes. Uploads are
   held in memory and limited to 10 MB.
@@ -21,5 +27,6 @@ An Express API that reports metadata for uploaded files.
 - `GET /api/`: current time
 - `GET /api/:date`: a date string or Unix timestamp in milliseconds
 
-Run locally with `npm start`. User, exercise, and short URL data is held in
-memory and resets when the service restarts.
+Run locally with `npm start`. Run the converter's unit and functional tests
+with `npm test`. User, exercise, and short URL data is held in memory and
+resets when the service restarts.

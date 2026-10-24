@@ -7,6 +7,7 @@ var app = express();
 var dns = require('dns');
 var crypto = require('crypto');
 var multer = require('multer');
+var apiRoutes = require('./routes/api');
 var upload = multer({
   storage: multer.memoryStorage(),
   limits: {fileSize: 10 * 1024 * 1024}
@@ -20,6 +21,7 @@ var cors = require('cors');
 app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
+app.use('/api', apiRoutes);
 
 // http://expressjs.com/en/starter/static-files.html
 app.use(express.static('public'));
@@ -214,6 +216,10 @@ app.get("/api/:date?", function (req, res) {
 
 
 // Listen on port set in environment variable or default to 3000
-var listener = app.listen(process.env.PORT || 3000, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
+module.exports = app;
+
+if (require.main === module) {
+  var listener = app.listen(process.env.PORT || 3000, function () {
+    console.log('Your app is listening on port ' + listener.address().port);
+  });
+}

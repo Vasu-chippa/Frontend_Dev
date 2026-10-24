@@ -2,30 +2,32 @@
 
 <html>
    <head>
-      <title>File Metadata Microservice</title>
+      <title>Metric-Imperial Converter</title>
       <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon"/>
       <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
       <link href="style.css" rel="stylesheet" type="text/css">
    </head>
 
    <body>
-    <h1>File Metadata Microservice</h1>
-    <p>Upload a file to retrieve its name, media type, and size in bytes.</p>
+    <h1>Metric-Imperial Converter</h1>
+    <p>Convert volumes, distances, and weights using the API.</p>
     <hr />
     <div class="container">
       <h2>Example Usage:</h2>
       <ul>
-        <li><code>POST /api/fileanalyse</code> with a multipart file field named <code>upfile</code></li>
+        <li><a href="/api/convert?input=10L">10L to gallons</a></li>
+        <li><a href="/api/convert?input=1%2F2gal">1/2 gallon to liters</a></li>
+        <li><code>GET /api/convert?input=numberUnit</code></li>
       </ul>
 
-      <form action="/api/fileanalyse" method="POST" enctype="multipart/form-data">
-        <label for="upfile">Choose a file</label>
-        <input id="upfile" type="file" name="upfile" required>
-        <button type="submit">Upload File</button>
+      <form action="/api/convert" method="GET">
+        <label for="input">Value and unit (gal, L, mi, km, lbs, kg)</label>
+        <input id="input" type="text" name="input" placeholder="10L" required>
+        <button type="submit">Convert</button>
       </form>
     </div>
     <div class="footer">
-      <p>Other API challenge endpoints remain available.</p>
+      <p>Fractions and decimals are supported. Example: <code>2.5/6kg</code>.</p>
     </div>
   </body>
 </html>
