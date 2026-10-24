@@ -28,7 +28,7 @@ app.get("/api/hello", function (req, res) {
 
 app.get("/api/whoami", function (req, res) {
   res.json({
-    ipaddress: req.ip,
+    ipaddress: req.get('cf-connecting-ip') || req.ip,
     language: req.get('accept-language') || '',
     software: req.get('user-agent') || ''
   });

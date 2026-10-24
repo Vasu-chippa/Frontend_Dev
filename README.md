@@ -14,5 +14,5 @@ Example: `GET /api/1451001600000` returns
 `{"unix":1451001600000,"utc":"Fri, 25 Dec 2015 00:00:00 GMT"}`.
 Invalid dates return `{"error":"Invalid Date"}`.
 
-Run locally with `npm start`. The app trusts the immediate reverse proxy when
-resolving the client IP address.
+Run locally with `npm start`. On Render, the endpoint uses Cloudflare's
+client-IP header and falls back to Express's trusted-proxy IP resolution.
