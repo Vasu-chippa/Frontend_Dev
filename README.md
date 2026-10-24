@@ -1,10 +1,12 @@
-# Exercise Tracker
+# File Metadata Microservice
 
-An Express API for creating users, recording exercises, and retrieving
-date-filtered exercise logs.
+An Express API that reports metadata for uploaded files.
 
 ## Endpoints
 
+- `POST /api/fileanalyse` with a multipart file field named `upfile`: returns
+  the uploaded file's `name`, MIME `type`, and `size` in bytes. Uploads are
+  held in memory and limited to 10 MB.
 - `POST /api/users` with `username`: creates and returns a user.
 - `GET /api/users`: returns all users.
 - `POST /api/users/:_id/exercises` with `description`, `duration`, and optional

@@ -6,6 +6,11 @@ var express = require('express');
 var app = express();
 var dns = require('dns');
 var crypto = require('crypto');
+var multer = require('multer');
+var upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {fileSize: 10 * 1024 * 1024}
+});
 
 app.set('trust proxy', 1);
 
@@ -22,6 +27,18 @@ app.use(express.static('public'));
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
+});
+
+app.post("/api/fileanalyse", upload.single('upfile'), function (req, res) {
+  if (!req.file) {
+    return res.status(400).json({error: 'No file uploaded'});
+  }
+
+  res.json({
+    name: req.file.originalname,
+    type: req.file.mimetype,
+    size: req.file.size
+  });
 });
 
 

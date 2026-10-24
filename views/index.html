@@ -2,32 +2,30 @@
 
 <html>
    <head>
-      <title>Exercise Tracker</title>
+      <title>File Metadata Microservice</title>
       <link rel="shortcut icon" href="https://cdn.freecodecamp.org/universal/favicons/favicon-32x32.png" type="image/x-icon"/>
       <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
       <link href="style.css" rel="stylesheet" type="text/css">
    </head>
 
    <body>
-    <h1>Exercise Tracker</h1>
-    <p>Create users, record exercises, and view filtered exercise logs.</p>
+    <h1>File Metadata Microservice</h1>
+    <p>Upload a file to retrieve its name, media type, and size in bytes.</p>
     <hr />
     <div class="container">
       <h2>Example Usage:</h2>
       <ul>
-        <li><code>POST /api/users</code> with a <code>username</code> form field</li>
-        <li><code>POST /api/users/:_id/exercises</code> with <code>description</code>, <code>duration</code>, and optional <code>date</code></li>
-        <li><a href="/api/users">GET /api/users</a></li>
+        <li><code>POST /api/fileanalyse</code> with a multipart file field named <code>upfile</code></li>
       </ul>
 
-      <form action="/api/users" method="POST">
-        <label for="username">Create a user</label>
-        <input id="username" type="text" name="username" placeholder="username" required>
-        <button type="submit">Create User</button>
+      <form action="/api/fileanalyse" method="POST" enctype="multipart/form-data">
+        <label for="upfile">Choose a file</label>
+        <input id="upfile" type="file" name="upfile" required>
+        <button type="submit">Upload File</button>
       </form>
     </div>
     <div class="footer">
-      <p>Use <code>GET /api/users/:_id/logs?from=yyyy-mm-dd&amp;to=yyyy-mm-dd&amp;limit=20</code> to filter a user's exercise log.</p>
+      <p>Other API challenge endpoints remain available.</p>
     </div>
   </body>
 </html>
